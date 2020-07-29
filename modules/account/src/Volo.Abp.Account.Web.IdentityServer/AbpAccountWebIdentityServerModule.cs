@@ -28,9 +28,9 @@ namespace Volo.Abp.Account.Web
 
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
-            Configure<VirtualFileSystemOptions>(options =>
+            Configure<AbpVirtualFileSystemOptions>(options =>
             {
-                options.FileSets.AddEmbedded<AbpAccountWebIdentityServerModule>("Volo.Abp.Account.Web");
+                options.FileSets.AddEmbedded<AbpAccountWebIdentityServerModule>();
             });
 
             //TODO: Try to reuse from AbpIdentityAspNetCoreModule

@@ -56,7 +56,7 @@ An `IssueType` enum and an `IssueConsts` class (which may have some constant fie
 
 ### .Domain Project
 
-This is the domain layer of the solution. It mainly contains [entities, aggregate roots](../Entities.md), [domain services](../Domain-Services.md), [value types](../Value-Types.md), [repository interfaces](../Repositories.md) and other domain objects.
+This is the domain layer of the solution. It mainly contains [entities, aggregate roots](../Entities.md), [domain services](../Domain-Services.md), value types, [repository interfaces](../Repositories.md) and other domain objects.
 
 An `Issue` entity, an `IssueManager` domain service and an `IIssueRepository` interface are good candidates for this project.
 
@@ -133,7 +133,7 @@ For the `.Web.Unified` application, there is a single database, named `YourProje
 
 ##### How to Run?
 
-Set it as the startup project, run `Update-Database` command for the EF Core from Package Manager Console and run your application. Default username is `admin` and password is `1q2w3E*`.
+Set `host/YourProjectName.Web.Unified` as the startup project, run `Update-Database` command for the EF Core from Package Manager Console and run your application. Default username is `admin` and password is `1q2w3E*`.
 
 #### Separated Deployment & Databases Scenario
 

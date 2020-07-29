@@ -20,14 +20,14 @@ namespace Volo.Abp.Cli.ProjectBuilding
         protected ISourceCodeStore SourceCodeStore { get; }
         protected IModuleInfoProvider ModuleInfoProvider { get; }
         protected ICliAnalyticsCollect CliAnalyticsCollect { get; }
-        protected CliOptions Options { get; }
+        protected AbpCliOptions Options { get; }
         protected IJsonSerializer JsonSerializer { get; }
         protected IApiKeyService ApiKeyService { get; }
 
         public ModuleProjectBuilder(ISourceCodeStore sourceCodeStore,
             IModuleInfoProvider moduleInfoProvider,
             ICliAnalyticsCollect cliAnalyticsCollect,
-            IOptions<CliOptions> options,
+            IOptions<AbpCliOptions> options,
             IJsonSerializer jsonSerializer,
             IApiKeyService apiKeyService)
         {
@@ -48,7 +48,9 @@ namespace Volo.Abp.Cli.ProjectBuilding
             var templateFile = await SourceCodeStore.GetAsync(
                 args.TemplateName,
                 SourceCodeTypes.Module,
-                args.Version
+                args.Version,
+                null,
+                args.ExtraProperties.ContainsKey(GetSourceCommand.Options.Preview.Long)
             );
 
             var apiKeyResult = await ApiKeyService.GetApiKeyOrNullAsync();
@@ -83,6 +85,8 @@ namespace Volo.Abp.Cli.ProjectBuilding
                             !x.Key.Equals(NewCommand.Options.OutputFolder.Short, StringComparison.InvariantCultureIgnoreCase))
                 .Where(x => !x.Key.Equals(NewCommand.Options.Version.Long, StringComparison.InvariantCultureIgnoreCase) &&
                             !x.Key.Equals(NewCommand.Options.Version.Short, StringComparison.InvariantCultureIgnoreCase))
+                .Where(x => !x.Key.Equals(NewCommand.Options.TemplateSource.Short, StringComparison.InvariantCultureIgnoreCase) &&
+                            !x.Key.Equals(NewCommand.Options.TemplateSource.Long, StringComparison.InvariantCultureIgnoreCase))
                 .Select(x => x.Key).ToList();
 
             await CliAnalyticsCollect.CollectAsync(new CliAnalyticsCollectInputDto

@@ -31,9 +31,9 @@ namespace Volo.Abp.FeatureManagement
 
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
-            Configure<VirtualFileSystemOptions>(options =>
+            Configure<AbpVirtualFileSystemOptions>(options =>
             {
-                options.FileSets.AddEmbedded<AbpFeatureManagementWebModule>("Volo.Abp.FeatureManagement");
+                options.FileSets.AddEmbedded<AbpFeatureManagementWebModule>();
             });
 
             context.Services.AddAutoMapperObjectMapper<AbpFeatureManagementWebModule>();
