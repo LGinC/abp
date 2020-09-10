@@ -22,10 +22,12 @@ export namespace Config {
     logoUrl?: string;
   }
 
-  export interface ApiConfig {
+  export type ApiConfig = {
     [key: string]: string;
     url: string;
-  }
+  } & Partial<{
+    rootNamespace: string;
+  }>;
 
   export interface Apis {
     [key: string]: ApiConfig;
@@ -42,9 +44,14 @@ export namespace Config {
   }
 
   export type LocalizationParam = string | LocalizationWithDefault;
+  export type customMergeFn = (
+    localEnv: Partial<Config.Environment>,
+    remoteEnv: any,
+  ) => Config.Environment;
 
   export interface RemoteEnv {
     url: string;
+    mergeStrategy: 'deepmerge' | 'overwrite' | customMergeFn;
     method?: string;
     headers?: ABP.Dictionary<string>;
   }
