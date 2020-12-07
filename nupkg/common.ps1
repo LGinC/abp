@@ -31,6 +31,7 @@ $projects = (
     "framework/src/Volo.Abp.AspNetCore.Authentication.OAuth",
     "framework/src/Volo.Abp.AspNetCore.Authentication.OpenIdConnect",
     "framework/src/Volo.Abp.AspNetCore",
+    "framework/src/Volo.Abp.AspNetCore.Components",
     "framework/src/Volo.Abp.AspNetCore.Components.WebAssembly",
     "framework/src/Volo.Abp.AspNetCore.Components.WebAssembly.Theming",
     "framework/src/Volo.Abp.AspNetCore.Components.WebAssembly.BasicTheme",
@@ -84,7 +85,7 @@ $projects = (
     "framework/src/Volo.Abp.Ddd.Domain",
     "framework/src/Volo.Abp.Emailing",
     "framework/src/Volo.Abp.EntityFrameworkCore",
-    # "framework/src/Volo.Abp.EntityFrameworkCore.MySQL",
+    "framework/src/Volo.Abp.EntityFrameworkCore.MySQL",
     # "framework/src/Volo.Abp.EntityFrameworkCore.Oracle",
     # "framework/src/Volo.Abp.EntityFrameworkCore.Oracle.Devart",
     "framework/src/Volo.Abp.EntityFrameworkCore.PostgreSql",
@@ -136,6 +137,7 @@ $projects = (
     "framework/src/Volo.Abp.Validation",
     "framework/src/Volo.Abp.VirtualFileSystem",
     "framework/src/Volo.Abp.Kafka",
+    "framework/src/Volo.Abp.Swashbuckle",
 
     # modules/account
     "modules/account/src/Volo.Abp.Account.Application.Contracts",

@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.IdentityServer.ApiResources;
+using Volo.Abp.IdentityServer.ApiScopes;
 using Volo.Abp.IdentityServer.Clients;
 using Volo.Abp.IdentityServer.IdentityResources;
 
@@ -16,12 +17,24 @@ namespace Volo.Abp.IdentityServer
             }
 
             return queryable
-                .AsSplitQuery()
                 .Include(x => x.Secrets)
                 .Include(x => x.UserClaims)
                 .Include(x => x.Scopes)
-                .ThenInclude(s => s.UserClaims);
+                .Include(x => x.Properties);
         }
+
+        public static IQueryable<ApiScope> IncludeDetails(this IQueryable<ApiScope> queryable, bool include = true)
+        {
+            if (!include)
+            {
+                return queryable;
+            }
+
+            return queryable
+                .Include(x => x.UserClaims)
+                .Include(x => x.Properties);
+        }
+
 
         public static IQueryable<IdentityResource> IncludeDetails(this IQueryable<IdentityResource> queryable, bool include = true)
         {
@@ -31,7 +44,8 @@ namespace Volo.Abp.IdentityServer
             }
 
             return queryable
-                .Include(x => x.UserClaims);
+                .Include(x => x.UserClaims)
+                .Include(x => x.Properties);
         }
 
         public static IQueryable<Client> IncludeDetails(this IQueryable<Client> queryable, bool include = true)
@@ -42,7 +56,6 @@ namespace Volo.Abp.IdentityServer
             }
 
             return queryable
-                .AsSplitQuery()
                 .Include(x => x.AllowedGrantTypes)
                 .Include(x => x.RedirectUris)
                 .Include(x => x.PostLogoutRedirectUris)
