@@ -42,10 +42,18 @@ namespace Volo.Abp.IdentityServer.MongoDB
         {
             return await (await GetMongoQueryableAsync(cancellationToken))
                 .WhereIf(!filter.IsNullOrWhiteSpace(), x=>x.ClientId.Contains(filter))
-                .OrderBy(sorting ?? nameof(Client.ClientName))
+                .OrderBy(sorting.IsNullOrWhiteSpace() ? nameof(Client.ClientName) : sorting)
                 .As<IMongoQueryable<Client>>()
                 .PageBy<Client, IMongoQueryable<Client>>(skipCount, maxResultCount)
                 .ToListAsync(GetCancellationToken(cancellationToken));
+        }
+
+        public async Task<long> GetCountAsync(string filter = null, CancellationToken cancellationToken = default)
+        {
+            return await (await GetMongoQueryableAsync(cancellationToken))
+                .WhereIf<Client, IMongoQueryable<Client>>(!filter.IsNullOrWhiteSpace(),
+                    x => x.ClientId.Contains(filter))
+                .LongCountAsync(GetCancellationToken(cancellationToken));
         }
 
         public virtual async Task<List<string>> GetAllDistinctAllowedCorsOriginsAsync(

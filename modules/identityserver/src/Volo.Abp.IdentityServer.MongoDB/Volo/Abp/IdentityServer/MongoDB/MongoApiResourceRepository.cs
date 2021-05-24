@@ -50,10 +50,20 @@ namespace Volo.Abp.IdentityServer.MongoDB
                          x => x.Name.Contains(filter) ||
                          x.Description.Contains(filter) ||
                          x.DisplayName.Contains(filter))
-                .OrderBy(sorting ?? nameof(ApiResource.Name))
+                .OrderBy(sorting.IsNullOrWhiteSpace() ? nameof(ApiResource.Name) : sorting)
                 .As<IMongoQueryable<ApiResource>>()
                 .PageBy<ApiResource, IMongoQueryable<ApiResource>>(skipCount, maxResultCount)
                 .ToListAsync(GetCancellationToken(cancellationToken));
+        }
+
+        public async Task<long> GetCountAsync(string filter = null, CancellationToken cancellationToken = default)
+        {
+            return await (await GetMongoQueryableAsync(cancellationToken))
+                .WhereIf<ApiResource, IMongoQueryable<ApiResource>>(!filter.IsNullOrWhiteSpace(),
+                x => x.Name.Contains(filter) ||
+                     x.Description.Contains(filter) ||
+                     x.DisplayName.Contains(filter))
+                .LongCountAsync(GetCancellationToken(cancellationToken));
         }
 
         public virtual async Task<bool> CheckNameExistAsync(string name, Guid? expectedId = null, CancellationToken cancellationToken = default)

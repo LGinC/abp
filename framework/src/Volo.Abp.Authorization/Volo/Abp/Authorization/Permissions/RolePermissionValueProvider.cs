@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp.Security.Claims;
@@ -17,7 +17,7 @@ namespace Volo.Abp.Authorization.Permissions
 
         }
 
-        public async override Task<PermissionGrantResult> CheckAsync(PermissionValueCheckContext context)
+        public override async Task<PermissionGrantResult> CheckAsync(PermissionValueCheckContext context)
         {
             var roles = context.Principal?.FindAll(AbpClaimTypes.Role).Select(c => c.Value).ToArray();
 
@@ -37,9 +37,11 @@ namespace Volo.Abp.Authorization.Permissions
             return PermissionGrantResult.Undefined;
         }
 
-        public async override Task<MultiplePermissionGrantResult> CheckAsync(PermissionValuesCheckContext context)
+        public override async Task<MultiplePermissionGrantResult> CheckAsync(PermissionValuesCheckContext context)
         {
-            var permissionNames = context.Permissions.Select(x => x.Name).ToList();
+            var permissionNames = context.Permissions.Select(x => x.Name).Distinct().ToList();
+            Check.NotNullOrEmpty(permissionNames, nameof(permissionNames));
+
             var result = new MultiplePermissionGrantResult(permissionNames.ToArray());
 
             var roles = context.Principal?.FindAll(AbpClaimTypes.Role).Select(c => c.Value).ToArray();
@@ -51,6 +53,7 @@ namespace Volo.Abp.Authorization.Permissions
             foreach (var role in roles)
             {
                 var multipleResult = await PermissionStore.IsGrantedAsync(permissionNames.ToArray(), Name, role);
+
                 foreach (var grantResult in multipleResult.Result.Where(grantResult =>
                     result.Result.ContainsKey(grantResult.Key) &&
                     result.Result[grantResult.Key] == PermissionGrantResult.Undefined &&
@@ -61,6 +64,11 @@ namespace Volo.Abp.Authorization.Permissions
                 }
 
                 if (result.AllGranted || result.AllProhibited)
+                {
+                    break;
+                }
+
+                if (permissionNames.IsNullOrEmpty())
                 {
                     break;
                 }

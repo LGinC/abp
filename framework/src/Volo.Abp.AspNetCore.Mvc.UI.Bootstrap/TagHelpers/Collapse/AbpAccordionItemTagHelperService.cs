@@ -9,13 +9,13 @@ namespace Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Collapse
 {
     public class AbpAccordionItemTagHelperService : AbpTagHelperService<AbpAccordionItemTagHelper>
     {
-        public async override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
+        public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             SetRandomIdIfNotProvided();
 
-            var innerContent = (await output.GetChildContentAsync()).GetContent();
+            var childContent = await output.GetChildContentAsync();
 
-            var html = GetAccordionHeaderItem(context, output) + GetAccordionContentItem(context, output, innerContent);
+            var html = GetAccordionHeaderItem(context, output) + GetAccordionContentItem(context, output, childContent);
 
             var tabHeaderItems = context.GetValue<List<string>>(AccordionItems);
             tabHeaderItems.Add(html);
@@ -46,7 +46,7 @@ namespace Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Collapse
             return header.ToHtmlString();
         }
 
-        protected virtual string GetAccordionContentItem(TagHelperContext context, TagHelperOutput output, string content)
+        protected virtual string GetAccordionContentItem(TagHelperContext context, TagHelperOutput output, TagHelperContent content)
         {
             var show = (TagHelper.Active ?? false) ? " show" : "";
 
